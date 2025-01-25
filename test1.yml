@@ -1,0 +1,11 @@
+router:
+  host: 192.168.102.130
+  username: admin
+  password: pass
+  device_type: cisco_ios
+  management_ip: 192.168.50.130
+  loopbacks:
+    - 1.1.1.1
+    - 2.2.2.2
+    - 3.3.3.3
+    - 4.4.4.4
