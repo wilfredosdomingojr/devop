@@ -14,6 +14,11 @@ enable IOX:
 enableLinuxdockersinCSR1000v
 !!
 config t
+int gi 2
+no shut
+ip add 192.168.102.11 255.255.255.0
+line vty 0 14
+transport input all
 iox
 interface GigabitEthernet1
 ip address dhcp
