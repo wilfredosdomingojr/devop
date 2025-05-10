@@ -116,29 +116,33 @@ cli.configurep(rob_cm)
 ex.5: Create 4 loopbacks:
 
 import cli
-hi_1 = '''hostname PYDEVOP_AKO
-int loop 9
-ip add 9.9.9.9 255.255.255.255
-int loop 8
-ip add 8.8.8.8 255.255.255.255
-int loop 7
-ip add 7.7.7.7 255.255.255.255
-end
+
+commands = '''
+ip dhcp pool VOICEVLAN
+network 10.12.100.0 255.255.255.0
+default-router 10.12.100.4
+domain-name VOICEVLAN.COM
+dns-server 10.12.1.10
+option 150 ip 10.12.100.8
+END
 '''
-cli.configurep(hi_1)
+
+cli.configurep(commands)
 
 ex.6: DHCP SERVER VIA PYTHON:
 #!/usr/bin/env python
 import cli
-commands = [
-    "ip dhcp pool VOICEVLAN",
-    "network 10.12.100.0 255.255.255.0",
-    "default-router 10.12.100.4",
-    "domain-name VOICEVLAN.COM",
-    "dns-server 10.12.1.10",
-    "option 150 ip 10.12.100.8",
-    "END",
-]
+
+commands = '''
+    ip dhcp pool VOICEVLAN
+    network 10.12.100.0 255.255.255.0
+    default-router 10.12.100.4
+    domain-name VOICEVLAN.COM
+    dns-server 10.12.1.10
+    option 150 ip 10.12.100.8
+    END
+'''
+
 for c in commands:
     cli.executep(c)
 
