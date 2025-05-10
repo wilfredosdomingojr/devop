@@ -1,0 +1,36 @@
+conf t
+flow  record CCNP6-CUSTOM-OUT
+ description custom flow record for outband traffic
+ match ipv4 destination address
+ match transport destination-port
+ collect counter bytes
+ collect counter packets
+ end
+ 
+create a flow exporter
+conf t 
+flow exporter CCNP8-COLLECTOR-HOST
+destination 192.168.104.1
+export-protocol netflow-v9
+transport UDP 9999
+end
+
+combine flow monitor and flow record
+conf t
+flow monitor CCNP8-INBOUND-MONITOR
+record netflow ipv4 original-input
+cache timeout active 30
+exporter CCNP8-COLLECTOR-HOST
+flow monitor CCNP8-OUTBOUND-MONITOR
+ record CCNP6-CUSTOM-OUT
+ cache timeout active 30
+ exporter  CCNP8-COLLECTOR-HOST
+ exit
+ 
+define the interface to monitor
+
+conf t
+int gi 3
+ip flow monitor CCNP8-INBOUND-MONITOR input
+ip flow monitor CCNP8-INBOUND-MONITOR output
+end
