@@ -117,6 +117,20 @@ ex.5: Create 4 loopbacks:
 
 import cli
 
+cmd1 = '''hostname NETDEVOPS
+int loop 4
+ip add 4.4.4.4 255.255.255.255
+int loop 5
+ip add 5.5.5.5 255.255.255.255
+int loop 6
+ip add 6.6.6.6 255.255.255.255
+end
+'''
+cli.configure(cmd1)
+ex.6 DHCP server via python
+cli.configure(cmd1)
+import cli
+
 commands = '''
 ip dhcp pool VOICEVLAN
 network 10.12.100.0 255.255.255.0
