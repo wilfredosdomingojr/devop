@@ -1,3 +1,4 @@
+task2 : 1 
 conf t
 flow  record CCNP6-CUSTOM-OUT
  description custom flow record for outband traffic
@@ -34,3 +35,63 @@ int gi 3
 ip flow monitor CCNP8-INBOUND-MONITOR input
 ip flow monitor CCNP8-INBOUND-MONITOR output
 end
+
+LAB2 CONTROL PLANE POLICING : monitor all data entering and leaving the control plane
+: all the interfaces : g1,g2,g3
+ExamTask: limit the ping to 8000 packets/sec!
+conf t
+ip access-list extended ABUSEPING
+ permit icmp any any
+class-map STOPPING
+ match access-group name ABUSEPING
+policy-map PINGSTOP
+ class STOPPING
+ police 8000 conform-action transmit exceed-action drop
+ exit
+ control-plane
+ service-policy input PINGSTOP
+end
+show policy-map control-plane
+
+task2: limit telnet, ssh and https:
+conf t
+ip access-list extended TELNET
+ permit tcp any any eq 23
+ip access-list extended SSH
+ permit tcp any any eq 22
+ip access-list extended HTTPS
+ permit tcp any any eq 443
+ip access-list extended ICMP
+ permit icmp any any 
+class-map match-all CMTELNET
+match access-group name TELNET
+exit
+class-map match-all CMSSH
+match access-group name SSH
+exit
+class-map match-all CMHTTPS
+match access-group name HTTPS
+exit
+class-map match-all CMICMP
+match access-group name ICMP
+exit
+policy-map PMCOPP
+ class CMTELNET
+ police 10000 conform-action drop exceed-action drop
+ class CMSSH
+ police 80000 conform-action transmit exceed-action transmit
+ class CMHTTPS
+ police 60000 conform-action transmit exceed-action transmit
+ class CMICMP
+ police rate 4 pps conform-action transmit exceed-action drop
+class class-default
+police 12000  conform-action transmit exceed-action transmit
+exit
+control-plane
+service-policy input PMCOPP
+end
+
+THE JOURNEY TO 6 FIGURES A MONTH
+1. INSTALL CSR1000v 17 x 2 : site A and Site B
+2. make 3 loopbs each  x eem, python+linux + postman =9
+3. Ansible automate the 5 loopbacks. sample.yml 
